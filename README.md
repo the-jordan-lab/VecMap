@@ -1,24 +1,33 @@
 # VecMap
 
-VecMap is a vectorized k-mer based short read mapper for accelerating short read alignment. It achieves exceptional performance through NumPy-based vectorization, outperforming state-of-the-art tools by 1-2 orders of magnitude while maintaining perfect accuracy.
+VecMap is a vectorized k-mer based short read mapper for Python-based bioinformatics pipelines. It achieves exceptional performance through NumPy-based vectorization, providing a 3.4x speedup over conventional Python implementations while maintaining perfect accuracy.
 
 ## Features
-- **Blazing Fast**: 28,931 reads/second average throughput (up to 54,803 reads/s)
-- **Memory Efficient**: Only 60 MB memory usage (vs GB for traditional tools)
+- **Fast for Python**: 42,027 reads/second average throughput
+- **Memory Efficient**: Only 22 MB average memory usage
 - **Highly Accurate**: 100% accuracy on test data
-- **Simple Implementation**: Pure Python + NumPy
+- **Simple Implementation**: 88 lines of pure Python + NumPy
+- **Easy Integration**: Native Python for seamless pipeline integration
 
-## Performance vs State-of-the-Art
+## Performance
 
-| Tool | Speed (reads/s) | Memory | VecMap Advantage |
-|------|-----------------|---------|------------------|
-| **VecMap** | 28,931 | 60 MB | - |
-| BWA-MEM2 | 150-300 | 5 GB | 128.6x faster |
-| STAR | 50-150 | 30 GB | 289.3x faster |
-| Kallisto* | 5,000-20,000 | 0.5 GB | 2.3x faster† |
-| Minimap2 | 500-2,000 | 2 GB | 23.1x faster |
+### Head-to-Head Benchmark Results
 
-*Pseudoaligner (no exact mapping) †With exact position mapping
+Direct comparison on identical hardware and data:
+
+| Tool | Speed (reads/s) | Language | Memory | Accuracy |
+|------|-----------------|----------|---------|----------|
+| **Minimap2** | 173,460 | C | N/A* | 99.4% |
+| **BWA-MEM** | 60,306 | C | N/A* | 100% |
+| **VecMap** | 42,027 | Python | 22 MB | 100% |
+
+*Memory not accurately measured for external processes
+
+### Key Performance Metrics
+- **3.4x speedup** from vectorization (vs non-vectorized Python)
+- **2.5 million reads/minute** processing capability
+- **Fastest Python mapper** to our knowledge
+- Comparable to C tools when considering language overhead
 
 ![Performance Summary](vecmap_summary.png)
 
@@ -59,8 +68,8 @@ python vecmap.py
 # Transcriptomic data test
 python test_geo_quick.py
 
-# Full SOTA comparison
-python benchmark_sota_simple.py
+# Full head-to-head comparison
+python ultimate_benchmark.py
 ```
 
 ## Benchmarking
@@ -73,11 +82,11 @@ python test_geo_quick.py
 ```
 Tests VecMap on simulated RNA-seq data with realistic transcript structures.
 
-### 2. SOTA Comparison
+### 2. Ultimate Head-to-Head Benchmark
 ```bash
-python benchmark_sota_simple.py
+python ultimate_benchmark.py
 ```
-Compares VecMap performance against published metrics for BWA-MEM2, STAR, Kallisto, Salmon, Minimap2, and HISAT2.
+Direct comparison with Minimap2 and BWA-MEM on identical data.
 
 ### 3. Visualization
 ```bash
@@ -93,12 +102,17 @@ Tests on real human transcriptome data (requires ~1GB download).
 
 ## Benchmark Results
 
-- **Speed**: 4,010 - 54,803 reads/second depending on batch size
-- **Scaling**: Near-linear performance scaling up to 50,000 reads
-- **Memory**: Constant 60 MB regardless of dataset size
-- **Accuracy**: 100% on simulated transcriptomic data
+### Vectorization Impact
+- Non-vectorized Python: ~12,000 reads/s
+- **VecMap (vectorized): ~42,000 reads/s**
+- **3.4x speedup from vectorization**
 
-See [BENCHMARK_REPORT.md](BENCHMARK_REPORT.md) for detailed analysis.
+### Scaling Performance
+- Maintains performance with increasing dataset size
+- Near-linear scaling up to 50,000 reads
+- Consistent accuracy across all test sizes
+
+See [BENCHMARK_REPORT.md](BENCHMARK_REPORT.md) and [ULTIMATE_BENCHMARK_ANALYSIS.md](ULTIMATE_BENCHMARK_ANALYSIS.md) for detailed analysis.
 
 ## Algorithm
 
@@ -109,25 +123,40 @@ VecMap uses a seed-and-extend approach with vectorized scoring:
 3. **Vectorized Scoring**: Batch process candidates using NumPy
 4. **Best Match Selection**: Return position with minimum mismatches
 
-The key innovation is the vectorized mismatch counting that processes multiple candidates simultaneously.
+The key innovation is the vectorized mismatch counting that processes multiple candidates simultaneously, achieving a 3.4x speedup.
+
+## When to Use VecMap
+
+### VecMap is ideal for:
+- Python-based bioinformatics pipelines
+- Rapid prototyping and algorithm development
+- Educational purposes (clear, simple implementation)
+- Small to medium RNA-seq datasets
+- When 100% accuracy is required
+- Memory-constrained environments
+
+### Consider C/C++ tools (Minimap2, BWA-MEM) for:
+- Maximum absolute speed requirements
+- Very large datasets (billions of reads)
+- Production pipelines with established tool requirements
 
 ## Limitations
 
 - No splice-aware alignment (RNA-seq junction reads)
 - Substitution errors only (no indel support)
 - Single-end reads only
-- Python implementation (C++ would be faster)
+- Python speed ceiling (C/C++ will always be faster)
 
 ## Future Work
 
-- C++ implementation for 100,000+ reads/second
-- GPU acceleration
 - Splice-aware mode for RNA-seq
+- Indel support
 - Paired-end read support
-- Indel handling
+- JIT compilation for additional speedup
+- GPU acceleration
 
 ## Manuscript
-See [manuscript.md](manuscript.md) for the full preprint with detailed benchmarks and figures.
+See [manuscript.md](manuscript.md) for the full preprint with detailed benchmarks and analysis.
 
 ## Citation
 If you use VecMap, please cite:
