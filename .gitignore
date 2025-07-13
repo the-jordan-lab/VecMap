@@ -32,4 +32,22 @@ references/
 results/*.csv
 !benchmark_visualization.png
 !vecmap_scaling.png
-!vecmap_summary.png 
+!vecmap_summary.png
+
+# Package build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+*.log
+
+# Documentation
+docs/_build/
+*.pdf
+!docs/figures/*.pdf 
