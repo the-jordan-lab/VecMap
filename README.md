@@ -4,19 +4,18 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 
-VecMap leverages NumPy vectorization to achieve ultrafast exact sequence matching in pure Python. Designed for specific use cases where exact matching is sufficient, VecMap achieves 42,000+ reads/second—fast enough for real-world applications while remaining simple and hackable.
+VecMap leverages NumPy vectorization to achieve ultrafast exact sequence matching in pure Python. Designed for specific use cases VecMap achieves 42,000+ reads/second.
 
-## 🎯 When to Use VecMap
+## When to Use VecMap
 
 VecMap excels at:
 - **CRISPR guide detection** in pooled screens (>1M reads/sec)
 - **Cell barcode demultiplexing** for single-cell RNA-seq
 - **Transcript quantification** from RNA-seq data  
 - **Amplicon/primer matching** in targeted sequencing
-- **Teaching sequence alignment** concepts
 - **Rapid prototyping** of alignment-based tools
 
-## ⚠️ When NOT to Use VecMap
+## When NOT to Use VecMap
 
 VecMap is NOT suitable for:
 - Whole genome alignment (use Minimap2 or BWA)
@@ -25,7 +24,7 @@ VecMap is NOT suitable for:
 - Production pipelines requiring maximum speed
 - Any task requiring indel alignment
 
-## 🚀 Performance
+## Performance
 
 On real benchmarks against Ensembl human transcriptome:
 - **VecMap**: 42,027 reads/second (pure Python!)
@@ -34,7 +33,7 @@ On real benchmarks against Ensembl human transcriptome:
 
 Memory usage: ~22MB for typical transcriptome
 
-## 📦 Installation
+## Installation
 
 ```bash
 pip install vecmap
@@ -116,7 +115,7 @@ barcode_reads = [("AAACCCAAGAAACACT...", "read1"), ...]
 corrected = processor.correct_barcodes(processor.extract_barcodes(barcode_reads))
 ```
 
-## 🧬 How It Works
+## How It Works
 
 VecMap's speed comes from vectorizing the most expensive operation in exact matching:
 
@@ -127,7 +126,7 @@ VecMap's speed comes from vectorizing the most expensive operation in exact matc
 
 The key insight: NumPy's broadcasting transforms the inner loop from Python to optimized C code, achieving a 3.4× speedup.
 
-## 📊 Benchmark Results
+## Benchmark Results
 
 | Dataset | VecMap | Minimap2 | BWA-MEM | VecMap Accuracy |
 |---------|---------|----------|----------|-----------------|
@@ -135,7 +134,7 @@ The key insight: NumPy's broadcasting transforms the inner loop from Python to o
 | Medium (10K) | 37,691 reads/s | 169,232 reads/s | 60,476 reads/s | 99.95% |
 | Large (25K) | 42,137 reads/s | 189,536 reads/s | 58,799 reads/s | 99.93% |
 
-## 🛠️ Advanced Usage
+## Advanced Usage
 
 ### Custom Applications
 
@@ -156,7 +155,7 @@ def find_primers(reference, primer_list, max_mismatches=1):
     return results
 ```
 
-## 📚 Citation
+## Citation
 
 If you use VecMap in your research, please cite:
 
@@ -170,21 +169,13 @@ If you use VecMap in your research, please cite:
 }
 ```
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! VecMap is designed to be simple and hackable. Feel free to:
 - Add new applications in `vecmap/applications/`
 - Improve the core algorithm (keep it under 100 lines!)
 - Share your benchmarks and use cases
 
-## 📝 License
+## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-VecMap was inspired by the numerous bioinformaticians asking "Why is my Python alignment code so slow?" The answer isn't always "rewrite it in C"—sometimes it's "use NumPy better."
-
----
-
-**Remember**: VecMap is a specialized tool for exact matching. For general-purpose alignment, use established tools like Minimap2 or BWA-MEM. Choose the right tool for your task!
