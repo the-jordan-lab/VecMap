@@ -42,7 +42,7 @@ $^*$Correspondence: jjordan@bio.fsu.edu
 \maketitle
 
 \begin{abstract}
-The explosion of single-cell genomics and CRISPR screening has created an urgent need for ultrafast exact sequence matching. While traditional aligners excel at complex alignment tasks, they carry unnecessary overhead for applications requiring only exact matches. Here we present VecMap, a pure Python sequence matcher that leverages NumPy vectorization to achieve 42,027 reads/second throughput---comparable to C implementations from a decade ago. VecMap's key innovation is the use of NumPy broadcasting for parallel k-mer matching, achieving a consistent 3.4× speedup over baseline Python. On an Ensembl human transcriptome benchmark, VecMap processed reads at 70\% the speed of BWA-MEM while using only 22MB of memory. More importantly, VecMap excels at specialized tasks: detecting CRISPR guides at $>$1 million reads/second, demultiplexing cell barcodes for single-cell RNA-seq, and teaching sequence alignment concepts. Our analysis of production features (indel support, paired-end alignment) revealed why complex alignment remains the domain of compiled languages---these features reduced performance by 100--1000×. VecMap demonstrates that thoughtful algorithm design can achieve practical performance in high-level languages for specific bioinformatics tasks. The tool is freely available at \url{https://github.com/the-jordan-lab/VecMap}.
+The explosion of single-cell genomics and CRISPR screening has created an urgent need for ultrafast exact sequence matching. While traditional aligners excel at complex alignment tasks, they carry unnecessary overhead for applications where exact matching is the biologically correct approach. Here we present VecMap, a pure Python sequence matcher that leverages NumPy vectorization to achieve 42,027 reads/second throughput---comparable to C implementations from a decade ago. VecMap's key innovation is the use of NumPy broadcasting for parallel k-mer matching, achieving a consistent 3.4× speedup over baseline Python. On an Ensembl human transcriptome benchmark, VecMap processed reads at 70\% the speed of BWA-MEM while using only 22MB of memory. More importantly, VecMap excels at specialized tasks: detecting CRISPR guides at $>$1 million reads/second, demultiplexing cell barcodes for single-cell RNA-seq, and teaching sequence alignment concepts. Our analysis of production features (indel support, paired-end alignment) revealed why complex alignment remains the domain of compiled languages---these features reduced performance by 100--1000×. VecMap demonstrates that thoughtful algorithm design can achieve practical performance in high-level languages for specific bioinformatics tasks. The tool is freely available at \url{https://github.com/the-jordan-lab/VecMap}.
 
 \textbf{Keywords:} sequence alignment, CRISPR screens, single-cell genomics, NumPy, vectorization, exact matching
 \end{abstract}
@@ -65,7 +65,7 @@ We benchmarked VecMap against Minimap2 (v2.30) and BWA-MEM (v0.7.19) using simul
 
 VecMap achieved an average throughput of 42,027 reads/second across three dataset sizes (5K, 10K, and 25K reads). While Minimap2 was 4.1× faster (173,460 reads/s) and BWA-MEM 1.4× faster (60,306 reads/s), VecMap's performance is remarkable for pure Python code (Figure \ref{fig:performance}A). Memory usage was consistently low at 22MB average, though direct comparison with subprocess-launched tools was limited by measurement constraints.
 
-All tools achieved $>$99\% mapping rates on the simulated data. VecMap showed 99.9\% accuracy (reads mapped to correct positions), demonstrating that the exact matching approach is sufficient for high-quality transcriptome data.
+All tools achieved $>$99\% mapping rates on the simulated data. VecMap showed 99.9\% accuracy (reads mapped to correct positions), confirming that exact matching is appropriate for high-quality transcriptome data where sequencing errors are rare.
 
 \begin{figure}[H]
 \centering
@@ -109,7 +109,7 @@ These features require complex logic that cannot be easily vectorized, forcing i
 
 \subsection{VecMap excels at specialized applications}
 
-Despite limitations for general alignment, VecMap shines in specific use cases common in modern genomics:
+Despite limitations for general alignment, VecMap performs exceptionally well in specific use cases common in modern genomics:
 
 \subsubsection{CRISPR guide detection}
 We benchmarked VecMap on simulated CRISPR screening data with realistic guide libraries. Performance scaled from 86,180 reads/second for 100 guides to 2,525 reads/second for 10,000 guides (Figure \ref{fig:crispr}). Even with large libraries, this represents $>$1 million reads/second when searching for specific 20bp guide sequences.
@@ -133,9 +133,9 @@ VecMap demonstrates that pure Python can achieve practical performance for speci
 
 The consistent 3.4× vectorization speedup reveals both the power and limits of NumPy optimization. While significant, this speedup cannot close the full gap to compiled languages. Our failed production features experiment definitively shows why: complex alignment logic resists vectorization and requires the fine-grained control that low-level languages provide.
 
-VecMap's sweet spot lies in specialized applications where its simplicity becomes an asset. For CRISPR guide detection, the overhead of general aligners is unnecessary---guides are short, exact matches are expected, and specificity is paramount. Similarly, cell barcode matching benefits from VecMap's minimal memory footprint and straightforward logic.
+VecMap is particularly well-suited for specialized applications where exact matching is the correct biological criterion. For CRISPR guide detection, approximate matching would be counterproductive---a guide must match its target exactly to be functional, and allowing mismatches would only introduce false positives. Similarly, cell barcode matching benefits from VecMap's minimal memory footprint and straightforward logic.
 
-The broader lesson is that bioinformatics tool development need not be all-or-nothing regarding language choice. Python tools can complement C/C++ implementations by targeting specific use cases where performance requirements are moderate but development speed and accessibility matter. As datasets grow exponentially, having hackable tools for exploration becomes increasingly valuable.
+The broader lesson is that bioinformatics tool development need not be all-or-nothing regarding language choice. Python tools can complement C/C++ implementations by targeting specific use cases where performance requirements are moderate but development speed and accessibility matter. As datasets grow exponentially, having easily modifiable tools for exploration becomes increasingly valuable.
 
 Future work could explore GPU acceleration through CuPy, which should provide another order-of-magnitude speedup while maintaining Python accessibility. Additionally, VecMap's approach could be applied to other exact matching problems in genomics, such as primer detection or motif scanning.
 
