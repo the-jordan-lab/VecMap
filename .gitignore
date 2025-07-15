@@ -4,16 +4,27 @@ __pycache__/
 *$py.class
 *.so
 .Python
-venv/
-env/
-ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Benchmark outputs (keep the important ones)
-benchmark_data/
-benchmark_indices/
-benchmark_outputs/
-benchmark_results/*.csv
-!vecmap_sota_benchmark.csv
+# Virtual Environments
+venv/
+ENV/
+env/
+.venv
 
 # IDE
 .vscode/
@@ -21,33 +32,31 @@ benchmark_results/*.csv
 *.swp
 *.swo
 *~
-
-# OS
 .DS_Store
-Thumbs.db
-
-# Test data
-data/
-references/
-results/*.csv
-!benchmark_visualization.png
-!vecmap_scaling.png
-!vecmap_summary.png
-
-# Package build artifacts
-build/
-dist/
-*.egg-info/
-*.egg
-.eggs/
 
 # Testing
+.tox/
 .coverage
-htmlcov/
+.coverage.*
+.cache
 .pytest_cache/
-*.log
+htmlcov/
 
 # Documentation
 docs/_build/
-*.pdf
-!docs/figures/*.pdf 
+site/
+
+# Jupyter
+.ipynb_checkpoints
+*.ipynb
+
+# Project specific
+*.fasta
+*.fa
+*.fq
+*.fastq
+*.sam
+*.bam
+alignment_results/
+temp/
+scratch/ 

@@ -1,0 +1,11 @@
+# Exclude manuscript files from release archives
+manuscript/ export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+
+# Mark benchmark data files as generated
+benchmarks/results/**/*.csv linguist-generated=true
+benchmarks/results/**/*.txt linguist-generated=true
+
+# Mark documentation figures as vendored
+docs/figures/* linguist-vendored 
