@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 
-VecMap leverages NumPy vectorization to achieve ultrafast exact sequence matching in pure Python. Designed for specific use cases VecMap achieves 42,000+ reads/second.
+VecMap leverages NumPy vectorization to achieve ultrafast exact sequence matching in pure Python. Designed for applications where exact matching is the biologically correct approach, VecMap achieves 42,000+ reads/second—fast enough for real-world applications while remaining simple and hackable.
 
 ## When to Use VecMap
 

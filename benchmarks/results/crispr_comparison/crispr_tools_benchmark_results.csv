@@ -1,0 +1,7 @@
+tool,num_reads,elapsed_time,reads_per_second,memory_mb,guide_counts,accuracy,error
+VecMap,10000,0.04521679878234863,221156.74415906947,2.734375,{},0.0,
+CRISPResso2,10000,,0.0,0.0,{},0.0,Tool not installed
+MAGeCK,10000,,0.0,0.0,{},0.0,Tool not installed
+VecMap,50000,0.14915776252746582,335215.5405977817,4.3125,{},0.0,
+CRISPResso2,50000,,0.0,0.0,{},0.0,Tool not installed
+MAGeCK,50000,,0.0,0.0,{},0.0,Tool not installed
