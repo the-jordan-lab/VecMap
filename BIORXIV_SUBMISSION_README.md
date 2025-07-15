@@ -59,7 +59,7 @@ Current abstract: ~200 words (well under bioRxiv's 350-word limit)
 James M. Jordan  
 Department of Biological Science  
 Florida State University  
-Email: jjordan@bio.fsu.edu
+Email: jmjordan@fsu.edu, jmjordan@bio.fsu.edu, or jim@jordanlab.org
 
 ## Repository
 

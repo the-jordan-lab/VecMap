@@ -1,0 +1,9 @@
+tool,scenario,library_size,num_reads,elapsed_time,reads_per_second,memory_mb,guides_detected,detection_rate,implementation
+VecMap,"Small library, plasmid",442,10284610,276.12657618522644,37245.99834642884,1644.703125,442,1.0,Pure Python + NumPy vectorization
+VecMap,"Small library, negative selection",442,8974323,226.47069191932678,39626.862637028666,815.640625,442,1.0,Pure Python + NumPy vectorization
+VecMap,"Medium library, plasmid",1026,52370165,2682.7913887500763,19520.774227771573,6953.78125,1026,1.0,Pure Python + NumPy vectorization
+VecMap,"Medium library, negative selection",1026,48596867,2399.593725204468,20252.1228862853,6397.625,1026,1.0,Pure Python + NumPy vectorization
+VecMap,"Large library, plasmid",1486,104224606,7179.8501517772675,14516.26479616719,6961.046875,1486,1.0,Pure Python + NumPy vectorization
+VecMap,"Large library, negative selection",1486,99177482,25918.309049844742,3826.541376957387,13778.4375,1486,1.0,Pure Python + NumPy vectorization
+VecMap,"Large library, positive selection",1486,140807572,21649.577744960785,6503.940800082106,7159.140625,1486,1.0,Pure Python + NumPy vectorization
+VecMap,"Whole genome, negative selection",2252,200303177,19841.11425590515,10095.359283583854,4788.609375,2252,1.0,Pure Python + NumPy vectorization
