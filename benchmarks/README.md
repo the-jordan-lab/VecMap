@@ -9,9 +9,11 @@ benchmarks/
 ├── scripts/              # Benchmarking scripts
 │   ├── benchmark_sota.py            # Main performance comparison
 │   ├── crispr_comprehensive_benchmark.py  # CRISPR-specific benchmarks
-│   └── crispr_tools_comparison.py   # Head-to-head CRISPR tool comparison
+│   ├── crispr_tools_comparison.py   # Head-to-head CRISPR tool comparison
+│   └── generate_figures.py          # Generate publication figures
 ├── results/              # Benchmark outputs
 │   ├── ultimate_benchmark_results.csv     # General performance results
+│   ├── vecmap_sota_benchmark.csv          # State-of-the-art comparison
 │   ├── crispr_comprehensive/              # CRISPR benchmark results
 │   └── crispr_comparison/                 # Tool comparison results
 └── archived_experiments/ # Historical benchmarks
@@ -42,6 +44,12 @@ Compare VecMap against MAGeCK and CRISPResso2:
 
 ```bash
 python benchmarks/scripts/crispr_tools_comparison.py
+```
+
+Generate figures from benchmark results:
+
+```bash
+python benchmarks/scripts/generate_figures.py
 ```
 
 ## Key Results

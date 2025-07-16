@@ -84,8 +84,8 @@ run_benchmark_with_replicates \
 echo ""
 echo "4. Generating figures from benchmark data..."
 echo "==========================================="
-if [ -f "manuscript/create_manuscript_figures.py" ]; then
-    python manuscript/create_manuscript_figures.py
+if [ -f "benchmarks/scripts/generate_figures.py" ]; then
+    python benchmarks/scripts/generate_figures.py
     echo "Figures generated in docs/figures/"
 else
     echo "Warning: Figure generation script not found"

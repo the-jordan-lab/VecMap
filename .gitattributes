@@ -1,5 +1,4 @@
-# Exclude manuscript files from release archives
-manuscript/ export-ignore
+# Exclude repository maintenance files from release archives
 .gitattributes export-ignore
 .gitignore export-ignore
 
