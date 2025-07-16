@@ -25,6 +25,24 @@ from vecmap import vecmap
 alignments = vecmap(reference_seq, [(read_seq, read_id), ...])
 ```
 
+### Experimental Numba Acceleration
+
+VecMap also provides an early prototype `vecmap_numba` that JIT-compiles the
+candidate search loops with [Numba](https://numba.pydata.org/). This can offer
+a noticeable speed boost on machines where Numba is available:
+
+```python
+from vecmap import vecmap_numba
+alignments = vecmap_numba(reference_seq, reads, read_length)
+```
+
+The benchmark suite in `benchmarks/scripts/benchmark_sota.py` accepts a
+`--vecmap-impl` flag so you can compare the standard and Numba versions:
+
+```bash
+python benchmarks/scripts/benchmark_sota.py --vecmap-impl numba
+```
+
 ## Performance
 
 Benchmarks on human transcriptome (42,027 ± 1,856 reads/second in pure Python):

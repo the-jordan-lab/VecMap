@@ -13,5 +13,6 @@ __author__ = "James M. Jordan"
 __email__ = "jjordan@bio.fsu.edu"
 
 from .core.mapper import vecmap, generate_reference, generate_reads
+from .core.mapper_numba import vecmap_numba
 
-__all__ = ["vecmap", "generate_reference", "generate_reads"] 
+__all__ = ["vecmap", "vecmap_numba", "generate_reference", "generate_reads"]
