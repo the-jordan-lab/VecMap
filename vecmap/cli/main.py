@@ -74,7 +74,7 @@ Examples:
     parser.add_argument('-o', '--output', required=True,
                         help='Output alignment file')
     parser.add_argument('-k', '--kmer', type=int, default=20,
-                        help='K-mer size for indexing (default: 20)')
+                        help='Seed length for indexing (default: 20)')
     parser.add_argument('-n', '--max-reads', type=int, default=None,
                         help='Maximum number of reads to process')
     parser.add_argument('-v', '--verbose', action='store_true',
@@ -96,16 +96,21 @@ Examples:
         print(f"Loading reads from {args.query}...")
     
     reads = parse_fastq(args.query, args.max_reads)
-    
+
     if args.verbose:
         print(f"Loaded {len(reads):,} reads")
-    
+
+    # Determine read length
+    read_len = len(reads[0][0]) if reads else 0
+    if any(len(seq) != read_len for seq, _ in reads):
+        print("Warning: reads have varying lengths; using first read length")
+
     # Run alignment
     if args.verbose:
-        print(f"Running VecMap alignment (k={args.kmer})...")
-    
+        print(f"Running VecMap alignment (seed_len={args.kmer}, read_len={read_len})...")
+
     start_time = time.time()
-    alignments = vecmap(reference, reads, args.kmer)
+    alignments = vecmap(reference, reads, read_len, seed_len=args.kmer)
     elapsed_time = time.time() - start_time
     
     if args.verbose:
@@ -117,7 +122,8 @@ Examples:
         f.write(f"# VecMap alignment results\n")
         f.write(f"# Reference: {ref_header}\n")
         f.write(f"# Query: {args.query}\n")
-        f.write(f"# K-mer size: {args.kmer}\n")
+        f.write(f"# Seed length: {args.kmer}\n")
+        f.write(f"# Read length: {read_len}\n")
         f.write(f"# Reads processed: {len(reads)}\n")
         f.write(f"# Time: {elapsed_time:.2f} seconds\n")
         f.write(f"# Speed: {len(reads)/elapsed_time:,.0f} reads/second\n")

@@ -7,7 +7,8 @@ def generate_reference(length):
     random.seed(0)
     unit = ''.join(random.choice('ACGT') for _ in range(100))
     times = length // 100
-    return unit * times
+    remainder = length % 100
+    return unit * times + unit[:remainder]
 
 def generate_reads(ref, num_reads, read_len, error_rate=0.01):
     reads = []
