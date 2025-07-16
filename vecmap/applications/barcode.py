@@ -355,16 +355,25 @@ def process_10x_data(r1_fastq: str, r2_fastq: str,
         read_count = 0
         while True:
             h1 = f1.readline().strip()
+            if not h1:
+                break
+            if not h1.startswith('@'):
+                raise ValueError(f"Invalid FASTQ header format in R1 at read {read_count + 1}")
             s1 = f1.readline().strip()
+            if not s1:
+                raise ValueError(f"Incomplete FASTQ record in R1 at read {read_count + 1}")
             f1.readline()
             f1.readline()
             h2 = f2.readline().strip()
+            if not h2:
+                raise ValueError(f"R2 file has fewer reads than R1 at read {read_count + 1}")
+            if not h2.startswith('@'):
+                raise ValueError(f"Invalid FASTQ header format in R2 at read {read_count + 1}")
             s2 = f2.readline().strip()
+            if not s2:
+                raise ValueError(f"Incomplete FASTQ record in R2 at read {read_count + 1}")
             f2.readline()
             f2.readline()
-
-            if not h1 or not h2:
-                break
 
             read_id = h1[1:]
             r1_reads.append((s1, read_id))
@@ -373,7 +382,6 @@ def process_10x_data(r1_fastq: str, r2_fastq: str,
             read_count += 1
             if max_reads and read_count >= max_reads:
                 break
-
     barcode_map = processor.extract_barcodes(r1_reads)
     corrected = processor.correct_barcodes(barcode_map)
     umi_map = processor.extract_umis(r1_reads)
