@@ -12,6 +12,7 @@ Ultra-fast exact matching for:
 import numpy as np
 from typing import List, Dict, Tuple, Set, Optional
 from collections import defaultdict, Counter
+import itertools
 from ..core.mapper import vecmap
 
 
@@ -322,10 +323,24 @@ class FeatureBarcodeDetector:
         return dict(read_features)
 
 
-def process_10x_data(r1_fastq: str, r2_fastq: str, 
+def _fastq_reader(handle):
+    """Simple FASTQ reader yielding (sequence, read_id)."""
+    while True:
+        header = handle.readline().rstrip()
+        if not header:
+            break
+        seq = handle.readline().rstrip()
+        handle.readline()  # '+' line
+        handle.readline()  # quality line
+        read_id = header.split()[0]
+        yield seq, read_id
+
+
+def process_10x_data(r1_fastq: str, r2_fastq: str,
                     barcode_whitelist: Set[str],
                     feature_reference: Optional[Dict[str, str]] = None,
-                    max_reads: Optional[int] = None) -> Dict[str, Dict[str, int]]:
+                    max_reads: Optional[int] = None,
+                    batch_size: int = 10000) -> Dict[str, Dict[str, int]]:
     """
     Complete 10x Genomics data processing pipeline.
     
@@ -344,7 +359,42 @@ def process_10x_data(r1_fastq: str, r2_fastq: str,
         barcode_length=16,
         umi_length=10
     )
-    
-    # This would be implemented with actual FASTQ parsing
-    # Placeholder for demonstration
-    return {} 
+    feature_detector = None
+    if feature_reference:
+        feature_detector = FeatureBarcodeDetector(feature_reference)
+
+    cell_feature_counts = defaultdict(lambda: defaultdict(int))
+
+    processed = 0
+    with open(r1_fastq, "r") as f1, open(r2_fastq, "r") as f2:
+        r1_iter = _fastq_reader(f1)
+        r2_iter = _fastq_reader(f2)
+
+        while True:
+            r1_batch = list(itertools.islice(r1_iter, batch_size))
+            r2_batch = list(itertools.islice(r2_iter, batch_size))
+            if not r1_batch:
+                break
+
+            barcodes = processor.extract_barcodes(r1_batch)
+            barcodes = processor.correct_barcodes(barcodes)
+            umis = processor.extract_umis(r1_batch)
+
+            features = {}
+            if feature_detector:
+                features = feature_detector.detect_features(r2_batch)
+
+            for (_, read_id), (_, _read_id2) in zip(r1_batch, r2_batch):
+                if read_id not in barcodes:
+                    continue
+                cell = barcodes[read_id]
+                feats = features.get(read_id, ["gene"])
+                umi = umis.get(read_id)
+                for feat in feats:
+                    cell_feature_counts[cell][feat] += 1
+
+            processed += len(r1_batch)
+            if max_reads and processed >= max_reads:
+                break
+
+    return {cell: dict(counts) for cell, counts in cell_feature_counts.items()}
