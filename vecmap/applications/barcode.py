@@ -387,12 +387,13 @@ def process_10x_data(r1_fastq: str, r2_fastq: str,
             if feature_detector:
                 features = feature_detector.detect_features(r2_batch)
 
-            for (_, read_id), (_, _read_id2) in zip(r1_batch, r2_batch):
+            for (_, read_id), (_, read_id2) in zip(r1_batch, r2_batch):
+                if read_id != read_id2:
+                    raise ValueError(f"Read ID mismatch: {read_id} != {read_id2}")
                 if read_id not in barcodes:
                     continue
                 cell = barcodes[read_id]
                 feats = features.get(read_id, ["gene"])
-                umi = umis.get(read_id)
                 for feat in feats:
                     cell_feature_counts[cell][feat] += 1
 
