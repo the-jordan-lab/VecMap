@@ -40,7 +40,7 @@ For CRISPR screening specifically:
 - 1.9× faster than MAGeCK
 - 3.8× faster than CRISPResso2
 
-*Performance measured on Apple M1 Max, 32GB RAM, Python 3.11.5, NumPy 2.0.0*
+*Performance measured on Apple M3 Max, 128GB RAM, Python 3.11.5, NumPy 2.0.0*
 
 ## Applications
 
