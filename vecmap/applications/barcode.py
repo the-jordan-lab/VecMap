@@ -323,6 +323,7 @@ class FeatureBarcodeDetector:
         return dict(read_features)
 
 
+
 def _fastq_reader(handle):
     """Simple FASTQ reader yielding (sequence, read_id)."""
     while True:
@@ -345,20 +346,22 @@ def process_10x_data(r1_fastq: str, r2_fastq: str,
     Complete 10x Genomics data processing pipeline.
     
     Args:
-        r1_fastq: Path to Read 1 FASTQ (barcodes + UMIs)
-        r2_fastq: Path to Read 2 FASTQ (cDNA or features)
-        barcode_whitelist: Set of valid cell barcodes
-        feature_reference: Optional feature barcode reference
-        max_reads: Maximum reads to process
-        
+        r1_fastq: Path to Read 1 FASTQ containing cell barcodes and UMIs.
+        r2_fastq: Path to Read 2 FASTQ containing cDNA or feature reads.
+        barcode_whitelist: Set of valid cell barcodes.
+        feature_reference: Optional feature barcode reference mapping feature
+            names to sequences.
+        max_reads: Optional limit on reads processed.
+
     Returns:
-        Dict mapping cell barcodes to feature/gene counts
+        Dict mapping cell barcodes to feature/gene counts.
     """
     processor = BarcodeProcessor(
         barcode_whitelist=barcode_whitelist,
         barcode_length=16,
-        umi_length=10
+        umi_length=10,
     )
+
     feature_detector = None
     if feature_reference:
         feature_detector = FeatureBarcodeDetector(feature_reference)
