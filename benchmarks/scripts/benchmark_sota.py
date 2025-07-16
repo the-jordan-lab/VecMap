@@ -12,6 +12,15 @@ import json
 import numpy as np
 import pandas as pd
 from collections import defaultdict
+
+def _get_memory_usage() -> float:
+    """Get current memory usage in MB."""
+    try:
+        import psutil
+        process = psutil.Process(os.getpid())
+        return process.memory_info().rss / 1024 / 1024
+    except ImportError:
+        return 0.0
 try:
     import matplotlib.pyplot as plt
     MATPLOTLIB_AVAILABLE = True
@@ -195,20 +204,22 @@ def run_vecmap_benchmark(ref_sequence, reads):
     """Run VecMap benchmark"""
     print("Running VecMap...")
     tool = VecMapTool()
-    
+
     # Multiple runs for stability
     times = []
+    start_mem = _get_memory_usage()
     for _ in range(3):
         mappings, elapsed = tool.align_direct(ref_sequence, reads)
         times.append(elapsed)
-    
+
     avg_time = np.mean(times)
     std_time = np.std(times)
-    
+    end_mem = _get_memory_usage()
+
     # Calculate metrics
     mapped_count = sum(1 for m in mappings if m[0] != -1)
     correct_count = sum(1 for m in mappings if m[0] == m[2])
-    
+
     return {
         'tool': 'VecMap',
         'version': tool.version,
@@ -219,7 +230,7 @@ def run_vecmap_benchmark(ref_sequence, reads):
         'correct_mappings': correct_count,
         'mapping_rate': mapped_count / len(reads) * 100,
         'accuracy': correct_count / len(reads) * 100,
-        'memory_mb': 60,  # Approximate from previous tests
+        'memory_mb': max(0, end_mem - start_mem),
     }
 
 def run_tool_benchmark(tool, ref_file, reads_file, num_reads):
@@ -236,6 +247,7 @@ def run_tool_benchmark(tool, ref_file, reads_file, num_reads):
     
     # Index building
     index_start = time.time()
+    start_mem = _get_memory_usage()
     index_prefix = f"benchmark_indices/{tool.name.lower()}"
     
     if isinstance(tool, STARTool):
@@ -270,6 +282,7 @@ def run_tool_benchmark(tool, ref_file, reads_file, num_reads):
     
     avg_time = np.mean(align_times)
     std_time = np.std(align_times)
+    end_mem = _get_memory_usage()
     
     # Parse results (simplified - actual parsing would be tool-specific)
     return {
@@ -279,7 +292,7 @@ def run_tool_benchmark(tool, ref_file, reads_file, num_reads):
         'time_mean': avg_time,
         'time_std': std_time,
         'reads_per_second': num_reads / avg_time,
-        'memory_mb': 1000,  # Placeholder - would need actual measurement
+        'memory_mb': max(0, end_mem - start_mem),
     }
 
 def plot_results(results_df):

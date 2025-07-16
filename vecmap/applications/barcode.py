@@ -322,29 +322,84 @@ class FeatureBarcodeDetector:
         return dict(read_features)
 
 
-def process_10x_data(r1_fastq: str, r2_fastq: str, 
+def process_10x_data(r1_fastq: str, r2_fastq: str,
                     barcode_whitelist: Set[str],
                     feature_reference: Optional[Dict[str, str]] = None,
                     max_reads: Optional[int] = None) -> Dict[str, Dict[str, int]]:
-    """
-    Complete 10x Genomics data processing pipeline.
-    
+    """Simple 10x Genomics data processing pipeline.
+
+    This utility parses paired FASTQ files, extracts barcodes and UMIs
+    from ``r1_fastq`` and optionally detects feature barcodes in ``r2_fastq``.
+
     Args:
-        r1_fastq: Path to Read 1 FASTQ (barcodes + UMIs)
-        r2_fastq: Path to Read 2 FASTQ (cDNA or features)
-        barcode_whitelist: Set of valid cell barcodes
-        feature_reference: Optional feature barcode reference
-        max_reads: Maximum reads to process
-        
+        r1_fastq: Path to Read 1 FASTQ containing cell barcodes and UMIs.
+        r2_fastq: Path to Read 2 FASTQ containing cDNA or feature reads.
+        barcode_whitelist: Set of valid cell barcodes.
+        feature_reference: Optional feature barcode reference mapping feature
+            names to sequences.
+        max_reads: Optional limit on reads processed.
+
     Returns:
-        Dict mapping cell barcodes to feature/gene counts
+        Dict mapping cell barcodes to feature/gene counts.
     """
     processor = BarcodeProcessor(
         barcode_whitelist=barcode_whitelist,
         barcode_length=16,
-        umi_length=10
+        umi_length=10,
     )
-    
-    # This would be implemented with actual FASTQ parsing
-    # Placeholder for demonstration
-    return {} 
+
+    r1_reads: List[Tuple[str, str]] = []
+    r2_reads: List[Tuple[str, str]] = []
+
+    with open(r1_fastq, "r") as f1, open(r2_fastq, "r") as f2:
+        read_count = 0
+        while True:
+            h1 = f1.readline().strip()
+            if not h1:
+                break
+            if not h1.startswith('@'):
+                raise ValueError(f"Invalid FASTQ header format in R1 at read {read_count + 1}")
+            s1 = f1.readline().strip()
+            if not s1:
+                raise ValueError(f"Incomplete FASTQ record in R1 at read {read_count + 1}")
+            f1.readline()
+            f1.readline()
+            h2 = f2.readline().strip()
+            if not h2:
+                raise ValueError(f"R2 file has fewer reads than R1 at read {read_count + 1}")
+            if not h2.startswith('@'):
+                raise ValueError(f"Invalid FASTQ header format in R2 at read {read_count + 1}")
+            s2 = f2.readline().strip()
+            if not s2:
+                raise ValueError(f"Incomplete FASTQ record in R2 at read {read_count + 1}")
+            f2.readline()
+            f2.readline()
+
+            read_id = h1[1:]
+            r1_reads.append((s1, read_id))
+            r2_reads.append((s2, read_id))
+
+            read_count += 1
+            if max_reads and read_count >= max_reads:
+                break
+    barcode_map = processor.extract_barcodes(r1_reads)
+    corrected = processor.correct_barcodes(barcode_map)
+    umi_map = processor.extract_umis(r1_reads)
+
+    if feature_reference:
+        detector = FeatureBarcodeDetector(feature_reference)
+        feature_hits = detector.detect_features(r2_reads)
+    else:
+        feature_hits = {read_id: [] for _, read_id in r1_reads}
+
+    tuples = []
+    for _, read_id in r1_reads:
+        barcode = corrected.get(read_id)
+        umi = umi_map.get(read_id)
+        if not (barcode and umi):
+            continue
+        feats = feature_hits.get(read_id) or ["gene"]
+        for feat in feats:
+            tuples.append((barcode, umi, feat))
+
+    return processor.deduplicate_umis(tuples)
