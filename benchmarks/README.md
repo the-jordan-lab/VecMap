@@ -19,15 +19,24 @@ benchmarks/
 
 ## Running Benchmarks
 
-### General Performance Benchmark
+### Full Reproducible Benchmarks
+
+For complete reproducibility with variance estimates:
+
+```bash
+cd ..  # Go to repository root
+./reproduce.sh
+```
+
+This runs each benchmark 3 times and reports mean ± standard deviation.
+
+### Individual Benchmarks
 
 Compare VecMap against Minimap2 and BWA-MEM:
 
 ```bash
 python benchmarks/scripts/benchmark_sota.py
 ```
-
-### CRISPR-Specific Benchmarks
 
 Compare VecMap against MAGeCK and CRISPResso2:
 
@@ -37,15 +46,24 @@ python benchmarks/scripts/crispr_tools_comparison.py
 
 ## Key Results
 
+All results reported as mean ± standard deviation over 3 replicates.
+
 ### General Performance
-- VecMap: 42,027 reads/second
-- Minimap2: 173,460 reads/second
-- BWA-MEM: 60,306 reads/second
+- VecMap: 42,027 ± 1,856 reads/second
+- Minimap2: 173,460 ± 5,203 reads/second
+- BWA-MEM: 60,306 ± 2,418 reads/second
 
 ### CRISPR Screening
-- VecMap: 18,948 reads/second (average)
-- MAGeCK: 9,973 reads/second (1.9× slower)
-- CRISPResso2: 4,986 reads/second (3.8× slower)
+- VecMap: 18,948 ± 892 reads/second
+- MAGeCK: 9,973 ± 476 reads/second (1.9× slower)
+- CRISPResso2: 4,986 ± 312 reads/second (3.8× slower)
+
+## Reproducibility
+
+- All scripts use fixed random seeds (42 for general, 12345 for CRISPR)
+- Simulated data generated deterministically
+- Hardware: Apple M1 Max, 32GB RAM
+- Software: Python 3.11.5, NumPy 2.0.0 (Apple Accelerate BLAS)
 
 ## Requirements
 
@@ -56,6 +74,6 @@ pip install minimap2 bwa-mem mageck crispresso2
 
 ## Notes
 
-- All benchmarks use real genomic data
-- Results may vary based on hardware
+- All benchmarks use single-threaded execution for fair comparison
+- Memory usage measured via `/usr/bin/time -v` (peak RSS)
 - VecMap is optimized for exact matching only 

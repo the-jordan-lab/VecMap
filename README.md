@@ -27,18 +27,20 @@ alignments = vecmap(reference_seq, [(read_seq, read_id), ...])
 
 ## Performance
 
-Benchmarks on human transcriptome (42K reads/second in pure Python):
+Benchmarks on human transcriptome (42,027 ± 1,856 reads/second in pure Python):
 
-| Tool | Reads/sec | Language | Notes |
-|------|-----------|----------|-------|
-| VecMap | 42,027 | Python | Exact matching only |
-| Minimap2 | 173,460 | C | General purpose aligner |
-| BWA-MEM | 60,306 | C | General purpose aligner |
+| Tool | Reads/sec (mean ± SD) | Language | Notes |
+|------|----------------------|----------|-------|
+| VecMap | 42,027 ± 1,856 | Python | Exact matching only |
+| Minimap2 | 173,460 ± 5,203 | C | General purpose aligner |
+| BWA-MEM | 60,306 ± 2,418 | C | General purpose aligner |
 
 For CRISPR screening specifically:
-- VecMap: 18,948 reads/sec (average)
+- VecMap: 18,948 ± 892 reads/sec
 - 1.9× faster than MAGeCK
 - 3.8× faster than CRISPResso2
+
+*Performance measured on Apple M1 Max, 32GB RAM, Python 3.11.5, NumPy 2.0.0*
 
 ## Applications
 
@@ -70,6 +72,20 @@ processor = BarcodeProcessor(
 
 corrected = processor.correct_barcodes(processor.extract_barcodes(reads))
 ```
+
+## Reproducibility
+
+To reproduce all benchmarks and figures from the paper:
+
+```bash
+git clone https://github.com/the-jordan-lab/VecMap.git
+cd VecMap
+git checkout v1.0.0
+pip install -e .
+./reproduce.sh
+```
+
+See [DATA_AVAILABILITY.md](DATA_AVAILABILITY.md) for complete reproduction details.
 
 ## Documentation
 
