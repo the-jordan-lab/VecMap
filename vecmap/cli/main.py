@@ -101,10 +101,13 @@ Examples:
         print(f"Loaded {len(reads):,} reads")
 
     # Determine read length
-    read_len = len(reads[0][0]) if reads else 0
+    if not reads:
+        print("Error: No reads loaded")
+        sys.exit(1)
+
+    read_len = len(reads[0][0])
     if any(len(seq) != read_len for seq, _ in reads):
         print("Warning: reads have varying lengths; using first read length")
-
     # Run alignment
     if args.verbose:
         print(f"Running VecMap alignment (seed_len={args.kmer}, read_len={read_len})...")
