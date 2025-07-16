@@ -57,7 +57,6 @@ setup(
     entry_points={
         "console_scripts": [
             "vecmap=vecmap.cli.main:main",
-            "vecmap-crispr=vecmap.cli.crispr:main",
         ],
     },
     keywords=[
