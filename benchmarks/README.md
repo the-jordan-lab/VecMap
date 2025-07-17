@@ -75,7 +75,10 @@ All results reported as mean ± standard deviation over 3 replicates.
 - BWA-MEM: 60,306 ± 2,418 reads/second
 
 ### CRISPR Screening
-- VecMap: 18,948 ± 892 reads/second
+- VecMap: 18,948 ± 892 reads/second (average across library sizes)
+  - Small libraries (<500 guides): 37,000-40,000 reads/second
+  - Medium libraries (~1,000 guides): 19,000-20,000 reads/second  
+  - Large libraries (>1,500 guides): 3,800-14,500 reads/second
 - MAGeCK: 9,973 ± 476 reads/second (1.9× slower)
 - CRISPResso2: 4,986 ± 312 reads/second (3.8× slower)
 

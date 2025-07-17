@@ -25,11 +25,11 @@ pip install -e .
 
 ## Hardware/Software Requirements
 Benchmarks were performed on:
-- **CPU**: Apple M1 Max
-- **RAM**: 32GB
+- **CPU**: Apple M3 Max
+- **RAM**: 128GB
 - **OS**: macOS 14.5
-- **Python**: 3.11.5
-- **NumPy**: 2.0.0 (using Apple Accelerate BLAS)
+- **Python**: 3.12
+- **NumPy**: 2.3.1 (using Apple Accelerate BLAS)
 
 ## Archived Data
 Upon publication, raw benchmark outputs will be deposited to Zenodo with DOI.

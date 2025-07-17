@@ -36,11 +36,13 @@ Benchmarks on human transcriptome (42,027 ± 1,856 reads/second in pure Python):
 | BWA-MEM | 60,306 ± 2,418 | C | General purpose aligner |
 
 For CRISPR screening specifically:
-- VecMap: 18,948 ± 892 reads/sec
+- VecMap: 18,948 ± 892 reads/sec (average)
+  - Small libraries: ~40,000 reads/sec
+  - Large libraries: ~5,000 reads/sec
 - 1.9× faster than MAGeCK
 - 3.8× faster than CRISPResso2
 
-*Performance measured on Apple M3 Max, 128GB RAM, Python 3.11.5, NumPy 2.0.0*
+*Performance measured on Apple M3 Max, 128GB RAM, Python 3.12, NumPy 2.3.1*
 
 ## Applications
 

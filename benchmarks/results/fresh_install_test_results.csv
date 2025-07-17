@@ -1,0 +1,5 @@
+test_type,reads_processed,time_seconds,reads_per_second,notes
+cli_diverse_reference,1000,0.015,66146,"5 transcripts of 300-800bp each"
+python_api_repetitive,1000,0.072,13831,"generate_reference() creates repetitive sequence"
+crispr_guide_detection,10000,0.073,136833,"36 guides with context matching"
+barcode_extraction,5000,0.007,720052,"500 barcodes in whitelist" 
