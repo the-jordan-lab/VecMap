@@ -1,9 +1,5 @@
 # VecMap Performance Guide
 
-## When VecMap "Cranks" 🚀
-
-Based on extensive benchmarking, here's when VecMap performs best:
-
 ### 1. CRISPR Guide Detection Performance
 
 **Key Factor: Guide Library Size**
@@ -71,7 +67,3 @@ Guide Library Size vs Performance:
 Transcriptome (diverse): 47,503 reads/sec
 Continuous (repetitive):    468 reads/sec
 ```
-
-## Conclusion
-
-VecMap is optimized for **exact matching on diverse sequences**. It's not trying to compete with general aligners - it's designed for specific use cases where it can be 10-100x faster than alternatives. 
