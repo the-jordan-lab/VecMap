@@ -21,6 +21,19 @@ benchmarks/
 
 ## Running Benchmarks
 
+**Important:** The benchmarks require the `test_geo_quick.py` module which was missing from earlier versions. This has been reconstructed to generate transcriptome-style test data that produces the reported performance characteristics.
+
+### Prerequisites
+
+First, validate your environment is set up correctly:
+
+```bash
+cd benchmarks/scripts
+python validate_benchmark.py
+```
+
+This will check dependencies and run a quick performance test.
+
 ### Full Reproducible Benchmarks
 
 For complete reproducibility with variance estimates:
