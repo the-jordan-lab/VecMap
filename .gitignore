@@ -32,6 +32,9 @@ env/
 *.swp
 *.swo
 *~
+
+# Working figures
+docs/figures/
 .DS_Store
 
 # Testing
